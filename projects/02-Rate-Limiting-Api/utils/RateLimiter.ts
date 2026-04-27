@@ -41,8 +41,16 @@ export class RateLimiter {
     };
   }
 
+  private getIpDetailsTtlSeconds(): number {
+    return Math.ceil(this.capacity / this.refillRate);
+  }
+
   private async saveIpDetails(ip: string, ipDetails: IpDetails): Promise<void> {
-    await this.redisClient.setData(ip, JSON.stringify(ipDetails));
+    await this.redisClient.setData(
+      ip,
+      JSON.stringify(ipDetails),
+      this.getIpDetailsTtlSeconds(),
+    );
   }
 
   private hasTokenExhausted(tokens: number): boolean {

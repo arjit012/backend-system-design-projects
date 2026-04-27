@@ -12,8 +12,12 @@ import { RateLimiter } from "./utils/RateLimiter.js";
 const parsedCapacity = Number(process.env.RATE_LIMIT_CAPACITY);
 const parsedRefillRate = Number(process.env.RATE_LIMIT_REFILL_RATE);
 
-const CAPACITY = Number.isFinite(parsedCapacity) ? parsedCapacity : 10;
-const REFILL_RATE = Number.isFinite(parsedRefillRate) ? parsedRefillRate : 2;
+const CAPACITY =
+  Number.isFinite(parsedCapacity) && parsedCapacity > 0 ? parsedCapacity : 10;
+const REFILL_RATE =
+  Number.isFinite(parsedRefillRate) && parsedRefillRate > 0
+    ? parsedRefillRate
+    : 2;
 
 export class App {
   public readonly app: Express;
