@@ -13,7 +13,18 @@ export class RedisClient {
     return this.redisClient;
   }
 
-  public async setData(key: string, value: string): Promise<void> {
+  public async setData(
+    key: string,
+    value: string,
+    ttlSeconds?: number,
+  ): Promise<void> {
+    if (ttlSeconds && ttlSeconds > 0) {
+      await this.redisClient.set(key, value, {
+        expiration: { type: "EX", value: ttlSeconds },
+      });
+      return;
+    }
+
     await this.redisClient.set(key, value);
   }
 
